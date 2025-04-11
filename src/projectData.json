@@ -1,0 +1,40 @@
+[
+    {
+        "id": 1,
+        "title": "Perhimpunan Dokter Keluarga Indonesia",
+        "subtitle": "Official Website",
+        "image": "/project-images/PDKI.png",
+        "skills": [
+            "Next.js",
+            "Express.js",
+            "TypeScript",
+            "SQL"
+        ],
+        "link": "https://www.pdkindonesia.com/en"
+    },
+    {
+        "id": 2,
+        "title": "Planitorium Mobile App",
+        "subtitle": "Bangkit Academy 2024 Capstone",
+        "image": "/api/placeholder/600/200",
+        "skills": [
+            "React",
+            "Redux",
+            "Node.js",
+            "MongoDB"
+        ],
+        "link": "https://example.com/project2"
+    },
+    {
+        "id": 3,
+        "title": "Mobile Weather App",
+        "subtitle": "iOS & Android Application",
+        "image": "/api/placeholder/600/200",
+        "skills": [
+            "React Native",
+            "GraphQL",
+            "Firebase"
+        ],
+        "link": "https://example.com/project3"
+    }
+]

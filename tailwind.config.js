@@ -6,8 +6,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#5337D1"
-      }
+        primary: "#584fe8"
+      },
+      fontFamily: {
+        abel: ['Abel', 'sans-serif'],
+        onest: ['Onest', 'sans-serif']
+      },
+      keyframes: {
+        loadBar: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+      },
+      animation: {
+        loadBar: 'loadBar 2s ease-in-out forwards',
+      },
     },
   },
   plugins: [],

@@ -1,61 +1,36 @@
-import { FaCode, FaGamepad, FaMobileScreenButton, FaAngleDown } from "react-icons/fa6";
-import Navigation from "./components/navigation";
+// App.jsx
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Navigation from './components/navigation';
+import Loader from './components/loader';
+import Certifications from './pages/certifications';
+import About from './pages/about';
+import Projects from './pages/projects';
+import Home from './pages/home'; // You can rename App.jsx to Home.jsx for clarity if you want
 
-function App() {
+export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="flex justify-between px-24 py-12">
-      <div className="space-y-7">
-        <p className="text-3xl">Hi! Nice to meet you.</p>
-        <div className="flex items-center space-x-2">
-          <p className="text-3xl">I am</p>
-          <div className="w-4 h-4 rounded-full bg-yellow-400"></div>
-        </div>
-        <h1 className="text-6xl font-bold">Dustin Lionel.</h1>
-        <p className="text-xl">Software Developer</p>
-
-        <div className="flex space-x-10 mt-4">
-          <div className="flex items-center space-x-3">
-            <div className="w-1 h-1 rounded-full bg-white"></div>
-            <span>Web</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="w-1 h-1 rounded-full bg-white"></div>
-            <span>Mobile</span>
-          </div>
-          <div className="flex items-center space-x-3">
-            <div className="w-1 h-1 rounded-full bg-white"></div>
-            <span>Game</span>
-          </div>
-        </div>
+    <BrowserRouter>
+      <div className="bg-gradient-to-b from-[#0F172A] to-[#1E3A8A] text-white min-h-screen overflow-hidden flex flex-col">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/certifications" element={<Certifications />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+        </Routes>
       </div>
-
-      <div className="relative">
-        <div className="w-80 h-80 z-10 rounded-full bg-primary absolute right-24 top-28"></div>
-        <img
-          src="./profilepic.png"
-          alt="Dustin Lionel"
-          className="relative object-cover [clip-path:inset(0%_0%_23%_0%)] -top-8 right-24 z-10 scale-110"
-        />
-        <div className="absolute z-1 -top-14 -right-12">
-          <div className="w-32 h-32 rounded-full outline outline-4 bg-trasparent flex items-center justify-center">
-            <FaMobileScreenButton size={80} />
-          </div>
-        </div>
-        <div className="absolute z-20 right-4 top-16">
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-            <div className="w-10 h-8 border-2 border-teal-500 rounded-sm"></div>
-          </div>
-        </div>
-        <div className="absolute z-20 right-24 top-36">
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-            <div className="w-10 h-6 border-2 border-teal-500 rounded-sm flex items-center justify-center">
-              <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </BrowserRouter>
   );
 }
-
-export default App;

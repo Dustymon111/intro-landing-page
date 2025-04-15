@@ -24,7 +24,6 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="bg-gradient-to-b from-[#0F172A] to-[#1E3A8A] text-white min-h-screen overflow-hidden flex flex-col relative">
-        {/* Add the particle background here */}
         <ParticleBackground
           particleCount={150}
           particleColor="rgba(255, 255, 255, 0.5)"
@@ -33,7 +32,6 @@ export default function App() {
           wind={0.2}
         />
 
-        {/* Your main content with a z-index to appear above particles */}
         <div className="relative z-10">
           <Navigation />
           <Routes>

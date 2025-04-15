@@ -3,15 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import projectData from '../projectData.json';
 
 function Projects() {
-    // State to track current project index
     const [currentIndex, setCurrentIndex] = useState(0);
-    // State to track slide direction
     const [direction, setDirection] = useState(0);
 
-    // Check if projectData is available and is an array
-    console.log("Project data:", projectData);
-
-    // If projectData is not an array, we need to handle that
     const projects = Array.isArray(projectData) ? projectData : [];
 
     // Safety check
@@ -98,7 +92,6 @@ function Projects() {
                 exit="hidden"
                 variants={pageVariants}
                 transition={pageTransition}
-                className="p-8 min-h-screen"
             >
                 <div className="relative overflow-hidden">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
@@ -135,13 +128,22 @@ function Projects() {
                                 </div>
                             </div>
 
-                            <div className="flex justify-center mt-4 space-x-2">
+                            <div className="flex justify-center mt-4 flex-wrap gap-2">
                                 {currentProject.skills.map((skill, index) => (
-                                    <button key={index} className="bg-gray-800 text-white px-2 py-1 rounded-full text-xs">
-                                        {skill}
+                                    <button
+                                        key={index}
+                                        className="bg-gray-800 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-1 "
+                                    >
+                                        <img
+                                            src={currentProject.icons[index]}
+                                            alt={`${skill} icon`}
+                                            className="w-6 h-6"
+                                        />
+                                        <span className='font-semibold'>{skill}</span>
                                     </button>
                                 ))}
                             </div>
+
                         </motion.div>
                     </AnimatePresence>
                 </div>

@@ -8,33 +8,73 @@
             "Next.js",
             "Express.js",
             "TypeScript",
-            "SQL"
+            "SQL",
+            "Vercel"
+        ],
+        "icons": [
+            "/skills-icon/icons/nextjs/nextjs-original.svg",
+            "/skills-icon/icons/express/express-original.svg",
+            "/skills-icon/icons/typescript/typescript-original.svg",
+            "/skills-icon/icons/mysql/mysql-original.svg",
+            "/skills-icon/icons/vercel/vercel-original.svg"
         ],
         "link": "https://www.pdkindonesia.com/en"
     },
     {
         "id": 2,
         "title": "Planitorium Mobile App",
-        "subtitle": "Bangkit Academy 2024 Capstone",
-        "image": "/api/placeholder/600/200",
+        "subtitle": "Plant Disease Detection Application",
+        "image": "/project-images/planitorium.png",
         "skills": [
-            "React",
-            "Redux",
-            "Node.js",
-            "MongoDB"
+            "Kotlin",
+            "Figma",
+            "Android Studio"
         ],
-        "link": "https://example.com/project2"
+        "icons": [
+            "/skills-icon/icons/kotlin/kotlin-original.svg",
+            "/skills-icon/icons/figma/figma-original.svg",
+            "/skills-icon/icons/androidstudio/androidstudio-original.svg"
+        ],
+        "link": "https://github.com/Planitorium"
     },
     {
         "id": 3,
-        "title": "Mobile Weather App",
-        "subtitle": "iOS & Android Application",
-        "image": "/api/placeholder/600/200",
+        "title": "Budi Goes To School",
+        "subtitle": "2D Desktop Video Game",
+        "image": "/project-images/budi.png",
         "skills": [
-            "React Native",
-            "GraphQL",
+            "Unity",
+            "C#",
+            "Aseprite",
+            "Notion"
+        ],
+        "icons": [
+            "/skills-icon/icons/unity/unity-original.svg",
+            "/skills-icon/icons/csharp/csharp-original.svg",
+            "/skills-icon/aseprite.png",
+            "/skills-icon/icons/notion/notion-original.svg"
+        ],
+        "link": "https://ggstudio1.itch.io/budi-goes-to-school"
+    },
+    {
+        "id": 3,
+        "title": "EduCraft Mobile App",
+        "subtitle": "GPT-4o Question Maker Application",
+        "image": "/project-images/educraft.png",
+        "skills": [
+            "Flutter",
+            "Python",
+            "Flask",
+            "Google Cloud",
             "Firebase"
         ],
-        "link": "https://example.com/project3"
+        "icons": [
+            "/skills-icon/icons/flutter/flutter-original.svg",
+            "/skills-icon/icons/python/python-original.svg",
+            "/skills-icon/icons/flask/flask-original.svg",
+            "/skills-icon/icons/googlecloud/googlecloud-original.svg",
+            "/skills-icon/icons/firebase/firebase-original.svg"
+        ],
+        "link": "https://github.com/Dustymon111/Ekstraksi-File-GPT-4"
     }
 ]

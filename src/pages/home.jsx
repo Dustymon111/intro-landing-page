@@ -1,4 +1,5 @@
-import { FaCode, FaGamepad, FaMobileScreenButton, FaAngleDown } from "react-icons/fa6";
+import { FaCode, FaGamepad, FaMobileScreenButton } from "react-icons/fa6";
+import { IoMailOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 
@@ -64,7 +65,7 @@ function Home() {
 
     return (
         <motion.div
-            className="flex justify-between px-24 py-12 font-onest"
+            className="flex justify-between px-24 py-12 font-gothic"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -82,7 +83,7 @@ function Home() {
                     <p>Dustin Lionel.</p>
                 </motion.h1>
 
-                <motion.div variants={itemVariants}>
+                <motion.div variants={itemVariants} className="cursor-default">
                     <TypeAnimation
                         sequence={[
                             'Web Developer 💻',
@@ -99,7 +100,7 @@ function Home() {
                     />
                 </motion.div>
 
-                <motion.div className="flex space-x-10 mt-4 font-semibold" variants={itemVariants}>
+                <motion.div className="flex space-x-10 mt-4 font-semibold cursor-default" variants={itemVariants}>
                     <motion.div
                         className="flex items-center space-x-3"
                         whileHover={{ scale: 1.1, color: "#6366f1" }}
@@ -136,6 +137,23 @@ function Home() {
                         <span>Game</span>
                     </motion.div>
                 </motion.div>
+                <motion.div className="flex gap-4" variants={itemVariants}>
+                    <a href="https://www.linkedin.com/in/dustin-lionel-398487224/" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src="/skills-icon/icons/linkedin/linkedin-original.svg"
+                            alt="linkedin"
+                            className="w-10 h-10 hover:scale-110 transition-transform duration-300"
+                        />
+                    </a>
+                    <a href="https://github.com/Dustymon111" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src="/skills-icon/icons/github/github-original.svg"
+                            alt="github"
+                            className="w-10 h-10 hover:scale-110 transition-transform duration-300"
+                        />
+                    </a>
+                </motion.div>
+
             </motion.div>
 
             <motion.div

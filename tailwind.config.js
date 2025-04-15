@@ -10,7 +10,8 @@ module.exports = {
       },
       fontFamily: {
         abel: ['Abel', 'sans-serif'],
-        onest: ['Onest', 'sans-serif']
+        onest: ['Onest', 'sans-serif'],
+        gothic: ['Special Gothic Condensed One', 'sans-serif']
       },
       keyframes: {
         loadBar: {

@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #052275
+    --color-primary: #052275;
+    --font-abel: sans-serif, Abel;
+    --font-onest: sans-serif, Onest;
+    --font-gothic: sans-serif, Gothic;
+    --animate-loadBar: loadBar 2s ease-out forwards;
+    @keyframes loadBar {
+        0% { 
+          width: 0%;
+        }
+        100% { 
+          width: 100%; 
+      }
+    }
   }

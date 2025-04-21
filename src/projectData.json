@@ -76,5 +76,24 @@
             "/skills-icon/icons/firebase/firebase-original.svg"
         ],
         "link": "https://github.com/Dustymon111/Ekstraksi-File-GPT-4"
+    },
+    {
+        "id": 4,
+        "title": "Apple iPhone Website Clone",
+        "subtitle": "Website Clone",
+        "image": "/project-images/.png",
+        "skills": [
+            "React.js",
+            "Three.js",
+            "Tailwind",
+            "Vercel"
+        ],
+        "icons": [
+            "/skills-icon/icons/react/react-original.svg",
+            "/skills-icon/icons/threejs/threejs-original.svg",
+            "/skills-icon/icons/tailwindcss/tailwindcss-original.svg",
+            "/skills-icon/icons/vercel/vercel-original.svg"
+        ],
+        "link": "https://web-apple-clone-liart.vercel.app/"
     }
 ]

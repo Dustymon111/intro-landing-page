@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { IoPlaySkipBackSharp, IoPlaySkipForward, IoPlaySharp, IoPauseSharp } from "react-icons/io5";
 
 const songs = [
@@ -89,34 +90,55 @@ export default function MusicPlayer() {
         return `${minutes}:${seconds}`;
     };
 
+    const progress = duration ? (currentTime / duration) * 100 : 0;
+
     return (
-        <div className="bg-gray-900 text-white rounded-lg p-6 shadow-lg max-w-md">
-            <h2 className="max-sm:text-lg text-xl font-bold mb-2">{songs[currentIndex].title}</h2>
-            <p className="text-sm text-gray-300 mb-4">{songs[currentIndex].artist}</p>
+        <div className="glass rounded-3xl p-6 shadow-2xl w-full max-w-md">
+            <div className="flex items-center gap-4 mb-5">
+                <motion.div
+                    className="relative shrink-0 w-16 h-16 rounded-full bg-[conic-gradient(var(--color-accent),var(--color-accent-2),var(--color-accent))] grid place-items-center"
+                    animate={{ rotate: isPlaying ? 360 : 0 }}
+                    transition={isPlaying ? { duration: 6, repeat: Infinity, ease: 'linear' } : { duration: 0.6 }}
+                >
+                    <div className="w-5 h-5 rounded-full bg-ink border border-white/20" />
+                </motion.div>
+                <div className="min-w-0">
+                    <h3 className="text-base sm:text-lg font-bold leading-snug">{songs[currentIndex].title}</h3>
+                    <p className="text-sm text-slate-400">{songs[currentIndex].artist}</p>
+                </div>
+            </div>
 
             <audio ref={audioRef} src={songs[currentIndex].src} />
 
             {/* Slider */}
-            <div className="flex items-center space-x-2 mb-4">
-                <span className="text-xs w-10">{formatTime(currentTime)}</span>
+            <div className="flex items-center gap-3 mb-5 font-mono text-xs text-slate-400">
+                <span className="w-10">{formatTime(currentTime)}</span>
                 <input
                     type="range"
                     min={0}
                     max={duration || 0}
                     value={currentTime}
                     onChange={handleSliderChange}
-                    className="w-full h-1 rounded-lg bg-blue-500 accent-blue-600 cursor-pointer"
+                    aria-label="Seek"
+                    className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-sky-400"
+                    style={{ background: `linear-gradient(90deg, var(--color-accent) ${progress}%, rgb(255 255 255 / 0.15) ${progress}%)` }}
                 />
-                <span className="text-xs w-10 text-right">{formatTime(duration)}</span>
+                <span className="w-10 text-right">{formatTime(duration)}</span>
             </div>
 
             {/* Controls */}
-            <div className="flex items-center justify-center space-x-4">
-                <button onClick={prevSong} className="text-2xl"><IoPlaySkipBackSharp /></button>
-                <button onClick={playPause} className="text-3xl">
-                    {isPlaying ? <IoPauseSharp /> : <IoPlaySharp />}
-                </button>
-                <button onClick={nextSong} className="text-2xl"><IoPlaySkipForward /></button>
+            <div className="flex items-center justify-center gap-6">
+                <motion.button onClick={prevSong} aria-label="Previous track" className="text-xl text-slate-300 hover:text-white" whileTap={{ scale: 0.85 }}><IoPlaySkipBackSharp /></motion.button>
+                <motion.button
+                    onClick={playPause}
+                    aria-label={isPlaying ? 'Pause' : 'Play'}
+                    className="grid place-items-center w-14 h-14 rounded-full bg-white text-ink text-2xl shadow-[0_0_24px_-4px] shadow-accent/70"
+                    whileHover={{ scale: 1.06 }}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    {isPlaying ? <IoPauseSharp /> : <IoPlaySharp className="ml-0.5" />}
+                </motion.button>
+                <motion.button onClick={nextSong} aria-label="Next track" className="text-xl text-slate-300 hover:text-white" whileTap={{ scale: 0.85 }}><IoPlaySkipForward /></motion.button>
             </div>
         </div>
     );

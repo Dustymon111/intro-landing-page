@@ -1,177 +1,175 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { FaArrowLeft, FaArrowRight, FaArrowUpRightFromSquare } from 'react-icons/fa6';
+import { SectionHeading, easeOut } from '../components/reveal';
 import projectData from '../projectData.json';
 
-function Projects() {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [direction, setDirection] = useState(0);
+const slideVariants = {
+    enter: (direction) => ({ x: direction > 0 ? 80 : -80, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (direction) => ({ x: direction > 0 ? -80 : 80, opacity: 0 }),
+};
 
+// Screenshot that tilts toward the cursor
+function TiltImage({ src, alt }) {
+    const px = useMotionValue(0.5);
+    const py = useMotionValue(0.5);
+    const rotateX = useSpring(useTransform(py, [0, 1], [6, -6]), { stiffness: 200, damping: 20 });
+    const rotateY = useSpring(useTransform(px, [0, 1], [-8, 8]), { stiffness: 200, damping: 20 });
+
+    const handleMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        px.set((e.clientX - rect.left) / rect.width);
+        py.set((e.clientY - rect.top) / rect.height);
+    };
+    const reset = () => {
+        px.set(0.5);
+        py.set(0.5);
+    };
+
+    return (
+        <div className="[perspective:1200px]" onPointerMove={handleMove} onPointerLeave={reset}>
+            <motion.div
+                style={{ rotateX, rotateY }}
+                className="relative rounded-2xl overflow-hidden border border-white/10 bg-ink/60 shadow-2xl shadow-black/50 aspect-[16/10] grid place-items-center"
+            >
+                <img src={src} alt={alt} className="max-w-full max-h-full object-contain" draggable={false} />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.04] to-white/[0.12]" />
+            </motion.div>
+        </div>
+    );
+}
+
+function Projects() {
+    const [[currentIndex, direction], setSlide] = useState([0, 0]);
     const projects = Array.isArray(projectData) ? projectData : [];
+
+    const paginate = useCallback((step) => {
+        setSlide(([index]) => [(index + step + projects.length) % projects.length, step]);
+    }, [projects.length]);
+
+    useEffect(() => {
+        const handleKey = (e) => {
+            if (e.key === 'ArrowRight') paginate(1);
+            if (e.key === 'ArrowLeft') paginate(-1);
+        };
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+    }, [paginate]);
 
     // Safety check
     if (projects.length === 0) {
         return <div className="p-8 min-h-screen">No projects available</div>;
     }
 
-    // Get current project
-    const currentProject = projects[currentIndex];
-
-    // Navigation functions
-    const goToPrevious = () => {
-        setDirection(-1);
-        const isFirstProject = currentIndex === 0;
-        const newIndex = isFirstProject ? projects.length - 1 : currentIndex - 1;
-        setCurrentIndex(newIndex);
-    };
-
-    const goToNext = () => {
-        setDirection(1);
-        const isLastProject = currentIndex === projects.length - 1;
-        const newIndex = isLastProject ? 0 : currentIndex + 1;
-        setCurrentIndex(newIndex);
-    };
-
-    // Slide animations
-    const slideVariants = {
-        enter: (direction) => ({
-            x: direction > 0 ? 1000 : -1000,
-            opacity: 0
-        }),
-        center: {
-            x: 0,
-            opacity: 1
-        },
-        exit: (direction) => ({
-            x: direction < 0 ? 1000 : -1000,
-            opacity: 0
-        })
-    };
-
-    const slideTransition = {
-        duration: 0.01,
-        type: "spring",
-        stiffness: 100,
-        damping: 20
-    };
-
-    // Page load transition animation (fade-in or slide-in)
-    const pageVariants = {
-        hidden: { opacity: 0, y: -100 },
-        visible: { opacity: 1, y: 0 },
-    };
-
-
-    const pageTransition = {
-        duration: 0.8,
-        ease: "easeOut",
-    };
-
+    const project = projects[currentIndex];
 
     return (
-        <div className="relative w-full">
-            {/* Fixed position navigation buttons */}
-            <div className="hidden absolute left-10 inset-x-0 top-1/2 transform -translate-y-1/2 lg:flex justify-between px-4 z-10">
-                <button
-                    onClick={goToPrevious}
-                    className="bg-white text-primary p-3 rounded-full shadow-lg hover:bg-gray-100"
-                >
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
+        <div className="px-6 sm:px-10 xl:px-16 pt-10 lg:pt-16 max-w-7xl mx-auto">
+            <SectionHeading eyebrow="// projects" title="Things I've built outside the day job.">
+                Freelance, research, and side projects. Swipe, drag, or use the arrow keys to browse.
+            </SectionHeading>
 
-                <button
-                    onClick={goToNext}
-                    className="absolute bg-white right-10 text-primary p-3 rounded-full shadow-lg hover:bg-gray-100"
-                >
-                    <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
-            </div>
+            <div className="glass rounded-3xl p-5 sm:p-8 overflow-hidden">
+                <AnimatePresence initial={false} custom={direction} mode="wait">
+                    <motion.div
+                        key={currentIndex}
+                        custom={direction}
+                        variants={slideVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ duration: 0.45, ease: easeOut }}
+                        className="grid lg:grid-cols-[1.35fr_1fr] gap-8 lg:gap-12 items-center cursor-grab active:cursor-grabbing"
+                        drag="x"
+                        dragConstraints={{ left: 0, right: 0 }}
+                        dragElastic={0.2}
+                        onDragEnd={(event, info) => {
+                            if (info.offset.x < -80) paginate(1);
+                            else if (info.offset.x > 80) paginate(-1);
+                        }}
+                    >
+                        <TiltImage src={project.image} alt={`${project.title} screenshot`} />
 
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-                variants={pageVariants}
-                transition={pageTransition}
-                className="max-md:my-10 flex flex-col items-center cursor-grab active:cursor-grabbing"
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(event, info) => {
-                    if (info.offset.x < -100) {
-                        goToNext();
-                    } else if (info.offset.x > 100) {
-                        goToPrevious();
-                    }
-                }}
-            >
-                <div className="text-center md:mb-4">
-                    <a href={currentProject.link} target="_blank" rel="noopener noreferrer" className='flex items-center justify-center mb-2'>
-                        <h3 className="font-medium text-3xl max-sm:text-base">{currentProject.title}</h3>
-                        <svg className="w-7 h-8 ml-2 max-sm:w-4 max-sm:h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10 6H6C4.89543 6 4 6.89543 4 8V18C4 19.1046 4.89543 20 6 20H16C17.1046 20 18 19.1046 18 18V14M14 4H20M20 4V10M20 4L10 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </a>
-                    <p className="text-lg max-sm:text-xs">{currentProject.subtitle}</p>
-                </div>
+                        <div>
+                            <p className="font-mono text-xs text-accent mb-3">{project.context}</p>
+                            <h3 className="text-2xl sm:text-3xl xl:text-4xl font-bold">{project.title}</h3>
+                            <p className="text-slate-400 mt-1">{project.subtitle}</p>
+                            <p className="mt-5 text-slate-300 leading-relaxed">{project.description}</p>
 
-                {/* Fixed height container for images */}
-                <div className="w-full md:h-96 max-sm:my-5 max-sm flex justify-center overflow-hidden">
-                    <AnimatePresence initial={false} custom={direction} mode="popLayout">
-                        <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={slideVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={slideTransition}
-                            className="w-full h-full flex justify-center"
-                        >
-                            <div className="relative overflow-hidden rounded-lg h-full flex items-center mx-5">
-                                <img
-                                    src={currentProject.image}
-                                    alt={`${currentProject.title} Screenshot`}
-                                    className="object-contain max-w-full max-h-full"
-                                />
+                            <div className="flex flex-wrap gap-2 mt-6">
+                                {project.skills.map((skill, index) => (
+                                    <motion.span
+                                        key={skill}
+                                        className="inline-flex items-center gap-1.5 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-xs font-semibold"
+                                        initial={{ opacity: 0, y: 8 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.2 + index * 0.05 }}
+                                    >
+                                        {project.icons[index] && (
+                                            <span className="grid place-items-center w-5 h-5 rounded-md bg-white/90"><img src={project.icons[index]} alt="" className="w-3.5 h-3.5" /></span>
+                                        )}
+                                        {skill}
+                                    </motion.span>
+                                ))}
                             </div>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
 
-                <div className="flex justify-center mt-4 flex-wrap gap-2">
-                    {currentProject.skills.map((skill, index) => (
-                        <button
-                            key={index}
-                            className="bg-gray-800 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-1"
-                        >
-                            <img
-                                src={currentProject.icons[index]}
-                                alt={`${skill} icon`}
-                                className="w-6 h-6 max-sm:w-3 max-sm:h-3"
-                            />
-                            <span className='font-semibold max-sm:text-xs'>{skill}</span>
-                        </button>
-                    ))}
-                </div>
+                            <a
+                                href={project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onPointerDownCapture={(e) => e.stopPropagation()}
+                                className="group inline-flex items-center gap-2 mt-8 font-semibold text-white border-b border-accent/60 pb-1 hover:border-accent"
+                            >
+                                View project
+                                <FaArrowUpRightFromSquare className="text-sm transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                            </a>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
 
-                {/* Fixed position for dots */}
-                <div className="mt-8 h-8 flex justify-center space-x-2">
-                    {projects.map((_, index) => (
-                        <button
-                            key={index}
-                            className={`w-3 h-3 rounded-full transition-all duration-100 ${index === currentIndex ? 'bg-white scale-125' : 'bg-gray-500'}`}
-                            onClick={() => {
-                                setDirection(index > currentIndex ? 1 : -1);
-                                setCurrentIndex(index);
-                            }}
-                        />
-                    ))}
+                {/* Controls */}
+                <div className="flex items-center justify-between gap-4 mt-8 pt-6 border-t border-white/10">
+                    <p className="font-mono text-sm text-slate-400 tabular-nums">
+                        <span className="text-white">{String(currentIndex + 1).padStart(2, '0')}</span> / {String(projects.length).padStart(2, '0')}
+                    </p>
+
+                    <div className="flex items-center gap-2">
+                        {projects.map((p, index) => (
+                            <button
+                                key={p.id}
+                                aria-label={`Go to ${p.title}`}
+                                className="relative h-1.5 rounded-full bg-white/15 overflow-hidden transition-all duration-300"
+                                style={{ width: index === currentIndex ? 36 : 12 }}
+                                onClick={() => setSlide([index, index > currentIndex ? 1 : -1])}
+                            >
+                                {index === currentIndex && (
+                                    <motion.span layoutId="project-dot" className="absolute inset-0 bg-gradient-to-r from-accent to-accent-2" />
+                                )}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="flex gap-2">
+                        <ArrowButton onClick={() => paginate(-1)} label="Previous project"><FaArrowLeft /></ArrowButton>
+                        <ArrowButton onClick={() => paginate(1)} label="Next project"><FaArrowRight /></ArrowButton>
+                    </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
+    );
+}
+
+function ArrowButton({ onClick, label, children }) {
+    return (
+        <motion.button
+            onClick={onClick}
+            aria-label={label}
+            className="grid place-items-center w-11 h-11 rounded-full glass hover:bg-white hover:text-ink transition-colors"
+            whileTap={{ scale: 0.9 }}
+        >
+            {children}
+        </motion.button>
     );
 }
 

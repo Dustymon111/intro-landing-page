@@ -3,12 +3,14 @@
         "id": 1,
         "title": "Perhimpunan Dokter Keluarga Indonesia",
         "subtitle": "Official Website",
+        "context": "Freelance · Jun – Jul 2023",
+        "description": "Built and deployed the official website of PDKI for thousands of medical professionals, with a Next.js frontend and an Express.js + MySQL backend.",
         "image": "/project-images/PDKI.png",
         "skills": [
             "Next.js",
             "Express.js",
             "TypeScript",
-            "SQL",
+            "MySQL",
             "Vercel"
         ],
         "icons": [
@@ -22,25 +24,54 @@
     },
     {
         "id": 2,
-        "title": "Planitorium Mobile App",
-        "subtitle": "Plant Disease Detection Application",
+        "title": "EduCraft",
+        "subtitle": "AI Question Extraction App",
+        "context": "Mikroskil University lecturer research · Dec 2024",
+        "description": "Led development of a mobile app that extracts practice questions from documents with GPT-4o, backed by a Flask service on Google Cloud.",
+        "image": "/project-images/educraft.png",
+        "skills": [
+            "Flutter",
+            "Python",
+            "Flask",
+            "GPT-4o",
+            "Google Cloud",
+            "Firebase"
+        ],
+        "icons": [
+            "/skills-icon/icons/flutter/flutter-original.svg",
+            "/skills-icon/icons/python/python-original.svg",
+            "/skills-icon/icons/flask/flask-original.svg",
+            null,
+            "/skills-icon/icons/googlecloud/googlecloud-original.svg",
+            "/skills-icon/icons/firebase/firebase-original.svg"
+        ],
+        "link": "https://github.com/Dustymon111/Ekstraksi-File-GPT-4"
+    },
+    {
+        "id": 3,
+        "title": "Planitorium",
+        "subtitle": "Plant Disease Detection App",
+        "context": "Bangkit Academy 2024 Batch 2 Capstone · Dec 2024",
+        "description": "Android app with machine-learning plant disease detection, integrated with cloud APIs.",
         "image": "/project-images/planitorium.png",
         "skills": [
             "Kotlin",
-            "Figma",
-            "Android Studio"
+            "Android Studio",
+            "Figma"
         ],
         "icons": [
             "/skills-icon/icons/kotlin/kotlin-original.svg",
-            "/skills-icon/icons/figma/figma-original.svg",
-            "/skills-icon/icons/androidstudio/androidstudio-original.svg"
+            "/skills-icon/icons/androidstudio/androidstudio-original.svg",
+            "/skills-icon/icons/figma/figma-original.svg"
         ],
         "link": "https://github.com/Planitorium"
     },
     {
-        "id": 3,
+        "id": 4,
         "title": "Budi Goes To School",
         "subtitle": "2D Desktop Video Game",
+        "context": "Side project",
+        "description": "A 2D desktop game built in Unity. I also composed its soundtrack, which you can play on the About page.",
         "image": "/project-images/budi.png",
         "skills": [
             "Unity",
@@ -57,30 +88,11 @@
         "link": "https://ggstudio1.itch.io/budi-goes-to-school"
     },
     {
-        "id": 3,
-        "title": "EduCraft Mobile App",
-        "subtitle": "GPT-4o Question Maker Application",
-        "image": "/project-images/educraft.png",
-        "skills": [
-            "Flutter",
-            "Python",
-            "Flask",
-            "Google Cloud",
-            "Firebase"
-        ],
-        "icons": [
-            "/skills-icon/icons/flutter/flutter-original.svg",
-            "/skills-icon/icons/python/python-original.svg",
-            "/skills-icon/icons/flask/flask-original.svg",
-            "/skills-icon/icons/googlecloud/googlecloud-original.svg",
-            "/skills-icon/icons/firebase/firebase-original.svg"
-        ],
-        "link": "https://github.com/Dustymon111/Ekstraksi-File-GPT-4"
-    },
-    {
-        "id": 4,
+        "id": 5,
         "title": "Apple iPhone Website Clone",
         "subtitle": "Website Clone",
+        "context": "Side project",
+        "description": "A recreation of Apple's iPhone product page, including an interactive 3D model rendered with Three.js.",
         "image": "/project-images/apple-clone.png",
         "skills": [
             "React.js",

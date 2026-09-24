@@ -3,10 +3,13 @@ import { IoMail } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { lazy, Suspense, useRef } from "react";
 import CountUp from "../components/countUp";
 import { easeOut, useRevealed } from "../components/reveal";
 import { profile, stats } from "../cvData";
+
+// three.js is loaded in its own chunk after the page renders
+const NetworkSphere = lazy(() => import("../components/networkSphere"));
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,9 +50,9 @@ function AnimatedWord({ text, className = '', delay = 0 }) {
 }
 
 const floatingBadges = [
-    { icon: FaDatabase, label: 'PostgreSQL', className: '-left-10 top-16', float: [0, -10, 0], duration: 4 },
-    { icon: FaBolt, label: '41 min → 3.7 s', className: '-right-12 top-40', float: [0, 12, 0], duration: 5 },
-    { icon: FaServer, label: 'Node.js · Rails', className: '-left-6 bottom-14', float: [0, -8, 0], duration: 4.5 },
+    { icon: FaDatabase, label: 'PostgreSQL', className: 'left-0 top-[12%]', float: [0, -10, 0], duration: 4 },
+    { icon: FaBolt, label: '41 min → 3.7 s', className: '-right-2 top-[44%]', float: [0, 12, 0], duration: 5 },
+    { icon: FaServer, label: 'Node.js · Rails', className: 'left-[8%] bottom-[10%]', float: [0, -8, 0], duration: 4.5 },
 ];
 
 function Home() {
@@ -131,30 +134,17 @@ function Home() {
                     </motion.div>
                 </motion.div>
 
-                {/* Portrait Section */}
+                {/* 3D Section */}
                 <motion.div
-                    className="relative mx-auto w-full max-w-[300px] sm:max-w-[340px] xl:max-w-[380px] aspect-[4/5] mt-6 lg:mt-0"
-                    initial={{ opacity: 0, scale: 0.92 }}
+                    className="relative mx-auto w-full max-w-[420px] sm:max-w-[520px] xl:max-w-[580px] aspect-square mt-4 lg:mt-0"
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.9, delay: 0.3, ease: easeOut }}
+                    transition={{ duration: 1.1, delay: 0.3, ease: easeOut }}
                 >
-                    {/* Rotating gradient ring */}
-                    <div className="absolute -inset-[2px] rounded-[2.2rem] overflow-hidden">
-                        <div className="absolute inset-[-50%] bg-[conic-gradient(from_0deg,transparent_0%,var(--color-accent)_20%,transparent_40%,var(--color-accent-2)_70%,transparent_90%)] animate-spin-slow" />
-                    </div>
-                    <div className="absolute inset-0 rounded-[2.1rem] bg-gradient-to-b from-[#1E3A8A] via-primary to-ink overflow-hidden">
-                        <div className="absolute inset-0 bg-grid opacity-60" />
-                        <div className="absolute left-1/2 top-1/3 -translate-x-1/2 w-56 h-56 rounded-full bg-accent/30 blur-3xl" />
-                        <motion.img
-                            src="/profilepic.png"
-                            alt="Dustin Lionel"
-                            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[118%] max-w-none object-contain object-bottom"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 1, delay: 0.6, ease: easeOut }}
-                        />
-                        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink via-ink/60 to-transparent" />
-                    </div>
+                    <div className="absolute inset-[18%] rounded-full bg-accent-2/25 blur-[90px]" />
+                    <Suspense fallback={null}>
+                        <NetworkSphere className="absolute -inset-[12%] pointer-events-none" />
+                    </Suspense>
 
                     {/* Floating badges */}
                     {floatingBadges.map(({ icon: Icon, label, className, float, duration }, i) => (

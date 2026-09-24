@@ -1,8 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
 import { FaArrowDown } from "react-icons/fa6";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// three.js rover is loaded in its own chunk after the page renders
+const RoverTrack = lazy(() => import('./roverTrack'));
 
 const links = [
     { to: '/', label: 'Home' },
@@ -22,6 +25,21 @@ function Navigation() {
         setMobileMenuOpen(false);
     }, [pathname]);
 
+    // Centre of each desktop link, in px from the pill's left edge
+    const pillRef = useRef(null);
+    const linkRefs = useRef([]);
+    const [stops, setStops] = useState([]);
+    const activeIndex = links.findIndex((link) => link.to === pathname);
+
+    useLayoutEffect(() => {
+        const measure = () => setStops(linkRefs.current.map((el) => (el ? el.offsetLeft + el.offsetWidth / 2 : 0)));
+        measure();
+        document.fonts?.ready.then(measure);
+        const observer = new ResizeObserver(measure);
+        if (pillRef.current) observer.observe(pillRef.current);
+        return () => observer.disconnect();
+    }, []);
+
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 12);
         handleScroll();
@@ -36,7 +54,7 @@ function Navigation() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-            <nav className="relative flex justify-between items-center px-6 sm:px-10 xl:px-16 py-4">
+            <nav className="relative flex justify-between items-center px-6 sm:px-10 xl:px-16 py-4 lg:pb-16">
                 <Link to="/" className='group flex items-center gap-3'>
                     <motion.img
                         src="/Logo.svg"
@@ -51,13 +69,21 @@ function Navigation() {
                     </div>
                 </Link>
 
-                {/* Desktop Navigation */}
-                <div className="hidden lg:flex items-center gap-1 glass rounded-full p-1.5">
-                    {links.map((link) => (
-                        <NavLink key={link.to} to={link.to} isActive={pathname === link.to}>
-                            {link.label}
-                        </NavLink>
-                    ))}
+                {/* Desktop Navigation, with the rover rail underneath */}
+                <div className="relative hidden lg:block">
+                    <div ref={pillRef} className="flex items-center gap-1 glass rounded-full p-1.5">
+                        {links.map((link, i) => (
+                            <NavLink
+                                key={link.to}
+                                to={link.to}
+                                isActive={pathname === link.to}
+                                linkRef={(el) => { linkRefs.current[i] = el; }}
+                            >
+                                {link.label}
+                            </NavLink>
+                        ))}
+                    </div>
+                    <RoverRail stops={stops} activeIndex={activeIndex} />
                 </div>
 
                 {/* Desktop Download CV Button */}
@@ -130,9 +156,10 @@ function Navigation() {
 }
 
 // Desktop link: the active pill slides between links via a shared layoutId
-function NavLink({ to, children, isActive }) {
+function NavLink({ to, children, isActive, linkRef }) {
     return (
         <Link
+            ref={linkRef}
             to={to}
             className={`relative px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 ${isActive ? 'text-ink' : 'text-slate-300 hover:text-white'}`}
         >
@@ -145,6 +172,41 @@ function NavLink({ to, children, isActive }) {
             )}
             <span className="relative z-10">{children}</span>
         </Link>
+    );
+}
+
+// Rail with a stop under each link; the 3D rover drives to the active one
+function RoverRail({ stops, activeIndex }) {
+    if (stops.length === 0 || !stops.some(Boolean)) return null;
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    const active = stops[activeIndex];
+
+    return (
+        <div className="pointer-events-none absolute inset-x-0 top-full h-14 mt-1">
+            <div
+                className="absolute top-[70%] h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+                style={{ left: first - 40, width: last - first + 80 }}
+            />
+            {active !== undefined && (
+                <motion.div
+                    className="absolute top-[70%] h-px bg-gradient-to-r from-accent/0 via-accent to-accent/0"
+                    initial={false}
+                    animate={{ left: active - 36, width: 72 }}
+                    transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+                />
+            )}
+            {stops.map((x, i) => (
+                <span
+                    key={i}
+                    className={`absolute top-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500 ${i === activeIndex ? 'w-2 h-2 bg-accent shadow-[0_0_10px] shadow-accent' : 'w-1 h-1 bg-white/30'}`}
+                    style={{ left: x }}
+                />
+            ))}
+            <Suspense fallback={null}>
+                <RoverTrack targetX={active} className="absolute inset-x-0 -top-5 bottom-0" />
+            </Suspense>
+        </div>
     );
 }
 
